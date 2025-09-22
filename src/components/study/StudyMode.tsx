@@ -92,10 +92,6 @@ function StudyMode({
             Shuffle Deck
           </button>
         )}
-
-        <div className="text-sm text-gray-600">
-          Card {currentIndex + 1} of {studyCards.length}
-        </div>
       </div>
 
       <ProgressBar cards={studyCards} />
@@ -107,7 +103,9 @@ function StudyMode({
         onMarkLearned={() => markCard(true)}
         onMarkRevision={() => markCard(false)}
       />
-
+      <div className="text-sm text-gray-600">
+        Card {currentIndex + 1} of {studyCards.length}
+      </div>
       <StudyNavigation
         currentIndex={currentIndex}
         totalCards={studyCards.length}
