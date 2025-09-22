@@ -1,4 +1,4 @@
-import type { Flashcard } from "../types/Flashcard";
+import type { Flashcard } from "../../types/Flashcard";
 
 function ProgressBar({ cards }: { cards: Flashcard[] }) {
   const learnedCount = cards.filter((card) => card.learned).length;

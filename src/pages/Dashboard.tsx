@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { topics } from "../Data/mock";
-import NewCardModal from "../components/NewCardModal";
+import NewCardModal from "../components/modals/NewCardModal";
 import { useCards } from "../context/CardContext";
-import CardItem from "../components/CardItem";
+import CardItem from "../components/cards/CardItem";
 import type { Flashcard } from "../types/Flashcard";
-import { StudyMode } from "./StudyMode";
-import ProgressBar from "../components/ProgressBar";
-import DeleteConfirmModal from "../components/DeleteConfirmModal";
+import StudyMode from "../components/study/StudyMode";
+import ProgressBar from "../components/ui/ProgressBar";
+import DeleteConfirmModal from "../components/modals/DeleteConfirmModal";
 
 function Dashboard() {
   const { cards, deleteCard } = useCards();
@@ -25,13 +25,6 @@ function Dashboard() {
       card.answer.toLowerCase().includes(search.toLowerCase());
     return matchesTopic && matchesSearch;
   });
-
-  const handleDeleteCard = () => {
-    if (deletingCard) {
-      deleteCard(deletingCard.id);
-      setDeletingCard(null);
-    }
-  };
 
   if (studyMode) {
     return (
@@ -66,16 +59,16 @@ function Dashboard() {
         </select>
 
         <button
-          className="bg-blue-500 text-white border-2 border-black rounded-md px-4 py-2 shadow-[4px_4px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition"
           onClick={() => setShowNewModal(true)}
+          className="bg-blue-500 text-white border-2 border-black rounded-md px-4 py-2 shadow-[4px_4px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition"
         >
           + New Card
         </button>
 
         <button
-          className="bg-green-500 text-white border-2 border-black rounded-md px-4 py-2 shadow-[4px_4px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition"
           onClick={() => setStudyMode(true)}
           disabled={filteredCards.length === 0}
+          className="bg-green-500 text-white border-2 border-black rounded-md px-4 py-2 shadow-[4px_4px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition disabled:opacity-50"
         >
           Study Mode
         </button>
@@ -84,19 +77,20 @@ function Dashboard() {
       <ProgressBar cards={cards} />
 
       {showNewModal && <NewCardModal onClose={() => setShowNewModal(false)} />}
-
       {editingCard && (
         <NewCardModal
           onClose={() => setEditingCard(null)}
           editCard={editingCard}
         />
       )}
-
       {deletingCard && (
         <DeleteConfirmModal
           card={deletingCard}
           onClose={() => setDeletingCard(null)}
-          onConfirm={handleDeleteCard}
+          onConfirm={() => {
+            deleteCard(deletingCard.id);
+            setDeletingCard(null);
+          }}
         />
       )}
 
@@ -113,14 +107,6 @@ function Dashboard() {
         ) : (
           <div className="col-span-full text-center py-12">
             <p className="text-gray-500 text-lg">No cards found</p>
-            {cards.length === 0 && (
-              <button
-                onClick={() => setShowNewModal(true)}
-                className="mt-4 bg-blue-500 text-white border-2 border-black rounded-md px-6 py-3 shadow-[4px_4px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition"
-              >
-                Create your first card
-              </button>
-            )}
           </div>
         )}
       </div>

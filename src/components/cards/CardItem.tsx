@@ -1,7 +1,8 @@
-import type { Flashcard } from "../types/Flashcard";
-import { topics } from "../Data/mock";
-import { useState } from "react";
-import { Edit3, Trash2, CheckCircle } from "lucide-react";
+import React, { useState } from "react";
+import type { Flashcard } from "../../types/Flashcard";
+import { Edit3, Trash2 } from "lucide-react";
+import TopicBadge from "../ui/TopicBadge";
+import LearnedBadge from "../ui/LearnedBadge";
 
 function CardItem({
   card,
@@ -13,7 +14,6 @@ function CardItem({
   onDelete: () => void;
 }) {
   const [flipped, setFlipped] = useState(false);
-  const topic = topics.find((t) => t.id === card.topicId);
 
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -23,11 +23,6 @@ function CardItem({
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     onDelete();
-  };
-
-  const handleFlip = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setFlipped(!flipped);
   };
 
   return (
@@ -48,39 +43,30 @@ function CardItem({
       </div>
 
       <div
-        onClick={handleFlip}
+        onClick={() => setFlipped(!flipped)}
         className="absolute inset-0 cursor-pointer"
         style={{ perspective: "1000px" }}
       >
         <div
-          className="relative w-full h-full transition-transform duration-500 preserve-3d"
+          className="relative w-full h-full transition-transform duration-500"
           style={{
             transformStyle: "preserve-3d",
             transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
           }}
         >
           <div
-            className="absolute inset-0 p-4 flex flex-col justify-between backface-hidden"
+            className="absolute inset-0 p-4 flex flex-col justify-between"
             style={{ backfaceVisibility: "hidden" }}
           >
             <div>
               <div className="flex justify-between items-start mb-3 pr-16">
-                <span
-                  className={`text-xs px-2 py-1 rounded font-medium ${topic?.color}`}
-                >
-                  {topic?.name}
-                </span>
-                {card.learned && (
-                  <span className="text-xs text-green-600 font-bold flex items-center gap-1">
-                    <CheckCircle size={12} /> Learned
-                  </span>
-                )}
+                <TopicBadge topicId={card.topicId} />
+                {card.learned && <LearnedBadge />}
               </div>
               <h3 className="font-semibold text-sm leading-tight pr-4">
                 {card.question}
               </h3>
             </div>
-
             <div className="flex justify-center">
               <span className="text-xs bg-gray-100 px-3 py-1.5 rounded border font-medium">
                 Click to reveal answer
@@ -89,7 +75,7 @@ function CardItem({
           </div>
 
           <div
-            className="absolute inset-0 p-4 flex flex-col justify-between backface-hidden"
+            className="absolute inset-0 p-4 flex flex-col justify-between"
             style={{
               backfaceVisibility: "hidden",
               transform: "rotateY(180deg)",
@@ -100,17 +86,12 @@ function CardItem({
                 <span className="text-xs px-2 py-1 bg-gray-200 text-gray-800 rounded font-medium">
                   Answer
                 </span>
-                {card.learned && (
-                  <span className="text-xs text-green-600 font-bold flex items-center gap-1">
-                    <CheckCircle size={12} /> Learned
-                  </span>
-                )}
+                {card.learned && <LearnedBadge />}
               </div>
               <p className="text-sm leading-tight text-gray-700 pr-4">
                 {card.answer}
               </p>
             </div>
-
             <div className="flex justify-center">
               <span className="text-xs bg-gray-100 px-3 py-1.5 rounded border font-medium">
                 Click to show question

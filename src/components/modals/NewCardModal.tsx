@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { topics } from "../Data/mock";
-import { useCards } from "../context/CardContext";
-import type { Flashcard } from "../types/Flashcard";
+import { useCards } from "../../context/CardContext";
+import type { Flashcard } from "../../types/Flashcard";
+import { topics } from "../../Data/mock";
 
 function NewCardModal({
   onClose,
@@ -25,14 +25,13 @@ function NewCardModal({
         topicId,
       });
     } else {
-      const newCard: Flashcard = {
+      addCard({
         id: crypto.randomUUID(),
         question: question.trim(),
         answer: answer.trim(),
         topicId,
         learned: false,
-      };
-      addCard(newCard);
+      });
     }
     onClose();
   };
@@ -50,7 +49,6 @@ function NewCardModal({
           className="border-2 border-black rounded px-3 py-2 w-full shadow-[3px_3px_0px_0px_#000]"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
-          required
         />
 
         <textarea
@@ -58,7 +56,6 @@ function NewCardModal({
           className="border-2 border-black rounded px-3 py-2 w-full h-24 shadow-[3px_3px_0px_0px_#000] resize-none"
           value={answer}
           onChange={(e) => setAnswer(e.target.value)}
-          required
         />
 
         <select
@@ -83,7 +80,7 @@ function NewCardModal({
           <button
             onClick={handleSave}
             disabled={!question.trim() || !answer.trim()}
-            className="px-4 py-2 bg-blue-500 text-white border-2 border-black rounded shadow-[3px_3px_0px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_#000] transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-blue-500 text-white border-2 border-black rounded shadow-[3px_3px_0px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_#000] transition disabled:opacity-50"
           >
             Save
           </button>
